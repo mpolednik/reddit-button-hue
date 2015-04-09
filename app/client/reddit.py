@@ -7,10 +7,10 @@ import threading
 
 class ButtonMonitor(threading.Thread):
 
-    def __init__(self, lasttick):
+    def __init__(self, last):
         super(ButtonMonitor, self).__init__()
 
-        self.lasttick = {}
+        self.last = last
         self.connection = \
             websocket.create_connection(
                 'wss://wss.redditmedia.com/thebutton?h='
@@ -18,12 +18,5 @@ class ButtonMonitor(threading.Thread):
 
     def run(self):
         while 1:
-            self.lasttick = json.loads(self.connection.recv())
-            print self.lasttick
+            self.last['tick'] = json.loads(self.connection.recv())
             time.sleep(0.3)
-
-
-if __name__ == '__main__':
-    lasttick = {}
-    monitor = ButtonMonitor(lasttick)
-    monitor.start()
